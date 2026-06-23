@@ -1,12 +1,21 @@
 from fastapi import FastAPI
 
-from app.db.database import Base, engine
-from app.models.user import User
+from starlette.middleware.sessions import SessionMiddleware
 
-Base.metadata.create_all(bind=engine)
+from app.api.auth import router as auth_router
 
 app = FastAPI(title="DevDesk API")
 
+app.add_middleware(
+    SessionMiddleware,
+    secret_key="devdesk_session_secret"
+)
+
+app.include_router(
+    auth_router,
+    prefix="/auth",
+    tags=["Auth"]
+)
 
 @app.get("/")
 def home():
