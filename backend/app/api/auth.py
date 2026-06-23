@@ -1,7 +1,11 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Depends
+from sqlalchemy.orm import Session
 from authlib.integrations.starlette_client import OAuth
-from starlette.responses import RedirectResponse
 from dotenv import load_dotenv
+
+from app.db.database import get_db
+from app.models.user import User
+
 import os
 
 load_dotenv()
@@ -30,7 +34,10 @@ async def login(request: Request):
         redirect_uri
     )
 @router.get("/github/callback", name="callback")
-async def callback(request: Request):
+async def callback(
+    request: Request,
+    db: Session = Depends(get_db)
+):
 
     token = await oauth.github.authorize_access_token(
         request
@@ -41,10 +48,27 @@ async def callback(request: Request):
         token=token
     )
 
-    user = response.json()
+    github_user = response.json()
+
+    existing_user = db.query(User).filter(
+        User.github_id == str(github_user["id"])
+    ).first()
+
+    if not existing_user:
+
+        existing_user = User(
+            github_id=str(github_user["id"]),
+            github_username=github_user["login"],
+            email=github_user.get("email"),
+            avatar_url=github_user.get("avatar_url")
+        )
+
+        db.add(existing_user)
+        db.commit()
+        db.refresh(existing_user)
 
     return {
-        "github_id": user["id"],
-        "username": user["login"],
-        "name": user.get("name"),
+        "message": "Login successful",
+        "user_id": existing_user.id,
+        "github_username": existing_user.github_username
     }
