@@ -11,6 +11,7 @@ function Dashboard() {
 
   const [dashboard, setDashboard] = useState(null);
   const [repos, setRepos] = useState([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
 
@@ -26,22 +27,12 @@ function Dashboard() {
           "/github/repos?user_id=1"
         );
 
-        console.log("Dashboard Data:");
-        console.log(response.data);
-
-        console.log("Repos Data:");
-        console.log(repoResponse.data);
-
         setDashboard(response.data);
         setRepos(repoResponse.data);
 
       } catch (error) {
 
-        console.log("ERROR:");
         console.log(error);
-
-        console.log("ERROR RESPONSE:");
-        console.log(error.response);
 
       }
 
@@ -58,6 +49,12 @@ function Dashboard() {
       </h1>
     );
   }
+
+  const filteredRepos = repos.filter((repo) =>
+    repo.name.toLowerCase().includes(
+      search.toLowerCase()
+    )
+  );
 
   return (
 
@@ -83,11 +80,35 @@ function Dashboard() {
         />
 
         <LanguageChart
-  languages={dashboard.languages}
-/>
+          languages={dashboard.languages}
+        />
+
+        <div className="mt-6">
+
+          <input
+            type="text"
+            placeholder="Search repositories..."
+            value={search}
+            onChange={(e) =>
+              setSearch(e.target.value)
+            }
+            className="
+              w-full
+              bg-slate-900
+              text-white
+              p-3
+              rounded-xl
+              border
+              border-slate-700
+              focus:outline-none
+              focus:border-cyan-400
+            "
+          />
+
+        </div>
 
         <RepoList
-          repos={repos}
+          repos={filteredRepos}
         />
 
       </div>

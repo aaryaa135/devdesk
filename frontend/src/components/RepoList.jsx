@@ -1,5 +1,13 @@
 function RepoList({ repos }) {
 
+  if (repos.length === 0) {
+    return (
+      <div className="bg-slate-900 rounded-2xl p-6 mt-6 text-center text-slate-400">
+        No repositories found.
+      </div>
+    );
+  }
+
   return (
 
     <div className="bg-slate-900 rounded-2xl p-6 mt-6">
