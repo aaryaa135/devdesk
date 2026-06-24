@@ -2,6 +2,7 @@ from fastapi import APIRouter, Request, Depends
 from sqlalchemy.orm import Session
 from authlib.integrations.starlette_client import OAuth
 from dotenv import load_dotenv
+from app.core.security import create_access_token
 
 from app.db.database import get_db
 from app.models.user import User
@@ -67,8 +68,17 @@ async def callback(
         db.commit()
         db.refresh(existing_user)
 
+    access_token = create_access_token(
+    {
+        "user_id": existing_user.id,
+        "github_username": existing_user.github_username
+    }
+)
+
     return {
         "message": "Login successful",
+        "access_token": access_token,
+        "token_type": "bearer",
         "user_id": existing_user.id,
         "github_username": existing_user.github_username
     }
