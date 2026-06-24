@@ -121,3 +121,47 @@ async def get_github_stats(
         "private_repositories": private_repositories,
         "top_language": top_language
     }
+
+@router.get("/languages")
+async def get_language_breakdown(
+    user_id: int,
+    db: Session = Depends(get_db)
+):
+
+    user = db.query(User).filter(
+        User.id == user_id
+    ).first()
+
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    headers = {
+        "Authorization": f"Bearer {user.github_access_token}"
+    }
+
+    async with httpx.AsyncClient() as client:
+
+        response = await client.get(
+            "https://api.github.com/user/repos?per_page=100",
+            headers=headers
+        )
+
+    repos = response.json()
+
+    languages = {}
+
+    for repo in repos:
+
+        language = repo["language"]
+
+        if language:
+
+            if language in languages:
+                languages[language] += 1
+            else:
+                languages[language] = 1
+
+    return languages
