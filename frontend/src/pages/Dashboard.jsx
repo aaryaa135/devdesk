@@ -6,6 +6,7 @@ import StatsCards from "../components/StatsCards";
 import LanguageList from "../components/LanguageList";
 import RepoList from "../components/RepoList";
 import LanguageChart from "../components/LanguageChart";
+import TopRepos from "../components/TopRepos";
 
 function Dashboard() {
 
@@ -83,6 +84,10 @@ function Dashboard() {
     );
 
   }
+
+  const topRepos = [...repos]
+    .sort((a, b) => b.stars - a.stars)
+    .slice(0, 5);
 
   return (
 
@@ -167,6 +172,10 @@ function Dashboard() {
           </select>
 
         </div>
+
+        <TopRepos
+          repos={topRepos}
+        />
 
         <RepoList
           repos={sortedRepos}
