@@ -12,6 +12,7 @@ function Dashboard() {
   const [dashboard, setDashboard] = useState(null);
   const [repos, setRepos] = useState([]);
   const [search, setSearch] = useState("");
+  const [sortBy, setSortBy] = useState("name");
 
   useEffect(() => {
 
@@ -55,6 +56,33 @@ function Dashboard() {
       search.toLowerCase()
     )
   );
+
+  const sortedRepos = [...filteredRepos];
+
+  if (sortBy === "stars") {
+
+    sortedRepos.sort(
+      (a, b) => b.stars - a.stars
+    );
+
+  }
+
+  else if (sortBy === "forks") {
+
+    sortedRepos.sort(
+      (a, b) => b.forks - a.forks
+    );
+
+  }
+
+  else {
+
+    sortedRepos.sort(
+      (a, b) =>
+        a.name.localeCompare(b.name)
+    );
+
+  }
 
   return (
 
@@ -107,8 +135,41 @@ function Dashboard() {
 
         </div>
 
+        <div className="mt-4">
+
+          <select
+            value={sortBy}
+            onChange={(e) =>
+              setSortBy(e.target.value)
+            }
+            className="
+              bg-slate-900
+              text-white
+              p-3
+              rounded-xl
+              border
+              border-slate-700
+            "
+          >
+
+            <option value="name">
+              Sort by Name
+            </option>
+
+            <option value="stars">
+              Sort by Stars
+            </option>
+
+            <option value="forks">
+              Sort by Forks
+            </option>
+
+          </select>
+
+        </div>
+
         <RepoList
-          repos={filteredRepos}
+          repos={sortedRepos}
         />
 
       </div>
