@@ -14,3 +14,5 @@ class User(Base):
     email = Column(String)
 
     avatar_url = Column(String)
+
+    github_access_token = Column(String)

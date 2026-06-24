@@ -57,13 +57,20 @@ async def callback(
         User.github_id == str(github_user["id"])
     ).first()
 
+    if existing_user:
+
+        existing_user.github_access_token = token["access_token"]
+
+        db.commit()
+
     if not existing_user:
 
         existing_user = User(
             github_id=str(github_user["id"]),
             github_username=github_user["login"],
             email=github_user.get("email"),
-            avatar_url=github_user.get("avatar_url")
+            avatar_url=github_user.get("avatar_url"),
+            github_access_token=token["access_token"]
         )
 
         db.add(existing_user)
