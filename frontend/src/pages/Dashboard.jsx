@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 
+import ProfileCard from "../components/ProfileCard";
+import StatsCards from "../components/StatsCards";
+import LanguageList from "../components/LanguageList";
+
 function Dashboard() {
 
   const [dashboard, setDashboard] = useState(null);
@@ -41,14 +45,26 @@ function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center">
+    <div>
 
-      <h1 className="text-6xl font-bold text-cyan-400">
-        DevDesk
-      </h1>
+      <h1>DevDesk Dashboard</h1>
+
+      <ProfileCard
+        profile={dashboard.profile}
+      />
+
+      <StatsCards
+        profile={dashboard.profile}
+        stats={dashboard.stats}
+      />
+
+      <LanguageList
+        languages={dashboard.languages}
+      />
 
     </div>
   );
+
 }
 
 export default Dashboard;
