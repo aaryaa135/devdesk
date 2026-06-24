@@ -9,22 +9,22 @@ function RepoList({ repos }) {
       </h2>
 
       {
-        repos.slice(0,10).map((repo) => (
+        repos.slice(0, 10).map((repo) => (
 
           <div
             key={repo.name}
-            className="border-b border-slate-700 py-3"
+            className="border-b border-slate-700 py-4 hover:bg-slate-800 px-3 rounded-lg transition"
           >
 
-            <h3 className="text-white font-semibold">
+            <h3 className="text-lg font-semibold text-white">
               {repo.name}
             </h3>
 
-            <p className="text-slate-400">
+            <p className="text-slate-400 mt-1">
               {repo.language || "Unknown"}
             </p>
 
-            <div className="flex gap-4 text-cyan-400 text-sm mt-2">
+            <div className="flex gap-6 mt-3 text-cyan-400">
 
               <span>
                 ⭐ {repo.stars}
