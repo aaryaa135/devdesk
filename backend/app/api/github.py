@@ -165,3 +165,108 @@ async def get_language_breakdown(
                 languages[language] = 1
 
     return languages
+
+@router.get("/profile")
+async def get_profile(
+    user_id: int,
+    db: Session = Depends(get_db)
+):
+
+    user = db.query(User).filter(
+        User.id == user_id
+    ).first()
+
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    headers = {
+        "Authorization": f"Bearer {user.github_access_token}"
+    }
+
+    async with httpx.AsyncClient() as client:
+
+        response = await client.get(
+            "https://api.github.com/user",
+            headers=headers
+        )
+
+    github_user = response.json()
+
+    return {
+        "name": github_user.get("name"),
+        "github_username": github_user.get("login"),
+        "bio": github_user.get("bio"),
+        "followers": github_user.get("followers"),
+        "following": github_user.get("following"),
+        "public_repos": github_user.get("public_repos"),
+        "avatar_url": github_user.get("avatar_url")
+    }
+
+@router.get("/dashboard")
+async def get_dashboard(
+    user_id: int,
+    db: Session = Depends(get_db)
+):
+
+    user = db.query(User).filter(
+        User.id == user_id
+    ).first()
+
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    headers = {
+        "Authorization": f"Bearer {user.github_access_token}"
+    }
+
+    async with httpx.AsyncClient() as client:
+
+        profile_response = await client.get(
+            "https://api.github.com/user",
+            headers=headers
+        )
+
+        repos_response = await client.get(
+            "https://api.github.com/user/repos?per_page=100",
+            headers=headers
+        )
+
+    github_user = profile_response.json()
+    repos = repos_response.json()
+
+    languages = {}
+
+    for repo in repos:
+
+        language = repo["language"]
+
+        if language:
+
+            if language in languages:
+                languages[language] += 1
+            else:
+                languages[language] = 1
+
+    return {
+        "profile": {
+            "name": github_user.get("name"),
+            "username": github_user.get("login"),
+            "followers": github_user.get("followers"),
+            "following": github_user.get("following"),
+            "avatar_url": github_user.get("avatar_url")
+        },
+        "stats": {
+            "total_repositories": len(repos),
+            "top_language": max(
+                languages,
+                key=languages.get
+            ) if languages else None
+        },
+        "languages": languages
+    }
