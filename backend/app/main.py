@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
 from starlette.middleware.sessions import SessionMiddleware
-
+from app.api.github import router as github_router
 from app.api.auth import router as auth_router
 
 app = FastAPI(title="DevDesk API")
@@ -22,3 +22,9 @@ def home():
     return {
         "message": "DevDesk Backend Running"
     }
+
+app.include_router(
+    github_router,
+    prefix="/github",
+    tags=["GitHub"]
+)
