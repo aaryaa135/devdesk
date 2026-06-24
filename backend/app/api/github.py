@@ -48,7 +48,10 @@ async def get_repositories(
                 "language": repo["language"],
                 "stars": repo["stargazers_count"],
                 "forks": repo["forks_count"],
-                "private": repo["private"]
+                "private": repo["private"],
+                "description": repo["description"],
+                "html_url": repo["html_url"],
+                "updated_at": repo["updated_at"]
             }
         )
 
