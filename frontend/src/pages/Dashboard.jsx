@@ -5,6 +5,7 @@ import ProfileCard from "../components/ProfileCard";
 import StatsCards from "../components/StatsCards";
 import LanguageList from "../components/LanguageList";
 import RepoList from "../components/RepoList";
+import LanguageChart from "../components/LanguageChart";
 
 function Dashboard() {
 
@@ -80,6 +81,10 @@ function Dashboard() {
         <LanguageList
           languages={dashboard.languages}
         />
+
+        <LanguageChart
+  languages={dashboard.languages}
+/>
 
         <RepoList
           repos={repos}
