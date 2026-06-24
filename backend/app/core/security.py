@@ -1,4 +1,4 @@
-from jose import jwt
+from jose import jwt, JWTError
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 import os
@@ -26,3 +26,20 @@ def create_access_token(data: dict):
     )
 
     return token
+
+
+def verify_token(token: str):
+
+    try:
+
+        payload = jwt.decode(
+            token,
+            SECRET_KEY,
+            algorithms=[ALGORITHM]
+        )
+
+        return payload
+
+    except JWTError:
+
+        return None

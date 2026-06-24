@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from authlib.integrations.starlette_client import OAuth
 from dotenv import load_dotenv
 from app.core.security import create_access_token
+from app.core.dependencies import get_current_user
 
 from app.db.database import get_db
 from app.models.user import User
@@ -82,3 +83,10 @@ async def callback(
         "user_id": existing_user.id,
         "github_username": existing_user.github_username
     }
+
+@router.get("/me")
+async def get_me(
+    current_user=Depends(get_current_user)
+):
+
+    return current_user
