@@ -4,10 +4,12 @@ import api from "../services/api";
 import ProfileCard from "../components/ProfileCard";
 import StatsCards from "../components/StatsCards";
 import LanguageList from "../components/LanguageList";
+import RepoList from "../components/RepoList";
 
 function Dashboard() {
 
   const [dashboard, setDashboard] = useState(null);
+  const [repos, setRepos] = useState([]);
 
   useEffect(() => {
 
@@ -19,10 +21,18 @@ function Dashboard() {
           "/github/dashboard?user_id=1"
         );
 
+        const repoResponse = await api.get(
+          "/github/repos?user_id=1"
+        );
+
         console.log("Dashboard Data:");
         console.log(response.data);
 
+        console.log("Repos Data:");
+        console.log(repoResponse.data);
+
         setDashboard(response.data);
+        setRepos(repoResponse.data);
 
       } catch (error) {
 
@@ -41,28 +51,44 @@ function Dashboard() {
   }, []);
 
   if (!dashboard) {
-    return <h1>Loading...</h1>;
+    return (
+      <h1 className="text-white text-center mt-10">
+        Loading...
+      </h1>
+    );
   }
 
   return (
-    <div>
 
-      <h1>DevDesk Dashboard</h1>
+    <div className="min-h-screen bg-slate-950 p-8">
 
-      <ProfileCard
-        profile={dashboard.profile}
-      />
+      <h1 className="text-5xl font-bold text-cyan-400 text-center mb-10">
+        DevDesk Dashboard
+      </h1>
 
-      <StatsCards
-        profile={dashboard.profile}
-        stats={dashboard.stats}
-      />
+      <div className="max-w-4xl mx-auto">
 
-      <LanguageList
-        languages={dashboard.languages}
-      />
+        <ProfileCard
+          profile={dashboard.profile}
+        />
+
+        <StatsCards
+          profile={dashboard.profile}
+          stats={dashboard.stats}
+        />
+
+        <LanguageList
+          languages={dashboard.languages}
+        />
+
+        <RepoList
+          repos={repos}
+        />
+
+      </div>
 
     </div>
+
   );
 
 }
