@@ -7,11 +7,14 @@ import LanguageList from "../components/LanguageList";
 import RepoList from "../components/RepoList";
 import LanguageChart from "../components/LanguageChart";
 import TopRepos from "../components/TopRepos";
+import Navbar from "../components/Navbar";
+import ActivityList from "../components/ActivityList";
 
 function Dashboard() {
 
   const [dashboard, setDashboard] = useState(null);
   const [repos, setRepos] = useState([]);
+  const [activities, setActivities] = useState([]);
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("name");
 
@@ -29,8 +32,13 @@ function Dashboard() {
           "/github/repos?user_id=1"
         );
 
+        const activityResponse = await api.get(
+          "/github/activity?user_id=1"
+        );
+
         setDashboard(response.data);
         setRepos(repoResponse.data);
+        setActivities(activityResponse.data);
 
       } catch (error) {
 
@@ -91,13 +99,19 @@ function Dashboard() {
 
   return (
 
-    <div className="min-h-screen bg-slate-950 p-8">
+    <div className="min-h-screen bg-slate-950">
 
-      <h1 className="text-5xl font-bold text-cyan-400 text-center mb-10">
-        DevDesk Dashboard
-      </h1>
+      <Navbar
+        profile={dashboard.profile}
+      />
 
-      <div className="max-w-4xl mx-auto">
+      <div className="p-8">
+
+        <h1 className="text-5xl font-bold text-cyan-400 text-center mb-10">
+          DevDesk Dashboard
+        </h1>
+
+        <div className="max-w-4xl mx-auto">
 
         <ProfileCard
           profile={dashboard.profile}
@@ -177,6 +191,10 @@ function Dashboard() {
           repos={topRepos}
         />
 
+        <ActivityList
+          activities={activities}
+        />
+
         <RepoList
           repos={sortedRepos}
         />
@@ -184,6 +202,8 @@ function Dashboard() {
       </div>
 
     </div>
+
+  </div>
 
   );
 

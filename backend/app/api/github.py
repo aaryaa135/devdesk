@@ -289,3 +289,57 @@ async def get_dashboard(
         },
         "languages": languages
     }
+
+@router.get("/activity")
+async def get_recent_activity(
+    user_id: int,
+    db: Session = Depends(get_db)
+):
+
+    user = db.query(User).filter(
+        User.id == user_id
+    ).first()
+
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    headers = {
+        "Authorization": f"Bearer {user.github_access_token}"
+    }
+
+    async with httpx.AsyncClient() as client:
+
+        profile_response = await client.get(
+            "https://api.github.com/user",
+            headers=headers
+        )
+
+    github_user = profile_response.json()
+
+    username = github_user["login"]
+
+    async with httpx.AsyncClient() as client:
+
+        events_response = await client.get(
+            f"https://api.github.com/users/{username}/events",
+            headers=headers
+        )
+
+    events = events_response.json()
+
+    clean_events = []
+
+    for event in events[:15]:
+
+        clean_events.append(
+            {
+                "type": event.get("type"),
+                "repo": event.get("repo", {}).get("name"),
+                "created_at": event.get("created_at")
+            }
+        )
+
+    return clean_events
