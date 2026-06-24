@@ -89,6 +89,9 @@ async def get_github_stats(
     public_repositories = 0
     private_repositories = 0
 
+    total_stars = 0
+    total_forks = 0
+
     languages = {}
 
     for repo in repos:
@@ -97,6 +100,9 @@ async def get_github_stats(
             private_repositories += 1
         else:
             public_repositories += 1
+
+        total_stars += repo["stargazers_count"]
+        total_forks += repo["forks_count"]
 
         language = repo["language"]
 
@@ -119,7 +125,9 @@ async def get_github_stats(
         "total_repositories": total_repositories,
         "public_repositories": public_repositories,
         "private_repositories": private_repositories,
-        "top_language": top_language
+        "top_language": top_language,
+        "total_stars": total_stars,
+        "total_forks": total_forks
     }
 
 @router.get("/languages")
@@ -242,7 +250,13 @@ async def get_dashboard(
 
     languages = {}
 
+    total_stars = 0
+    total_forks = 0
+
     for repo in repos:
+
+        total_stars += repo["stargazers_count"]
+        total_forks += repo["forks_count"]
 
         language = repo["language"]
 
@@ -266,7 +280,9 @@ async def get_dashboard(
             "top_language": max(
                 languages,
                 key=languages.get
-            ) if languages else None
+            ) if languages else None,
+            "total_stars": total_stars,
+            "total_forks": total_forks
         },
         "languages": languages
     }
