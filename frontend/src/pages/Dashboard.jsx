@@ -10,6 +10,7 @@ import TopRepos from "../components/TopRepos";
 import Navbar from "../components/Navbar";
 import ActivityList from "../components/ActivityList";
 import RepoAnalytics from "../components/RepoAnalytics";
+import ContributionHeatmap from "../components/ContributionHeatmap";
 
 function Dashboard() {
 
@@ -205,6 +206,8 @@ function Dashboard() {
         <RepoAnalytics
           repos={repos}
         />
+
+        <ContributionHeatmap />
 
         <RepoList
           repos={sortedRepos}
