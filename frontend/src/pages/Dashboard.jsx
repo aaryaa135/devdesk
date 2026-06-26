@@ -12,6 +12,8 @@ import ActivityList from "../components/ActivityList";
 import RepoAnalytics from "../components/RepoAnalytics";
 import ContributionHeatmap from "../components/ContributionHeatmap";
 import Skeleton from "../components/Skeleton";
+import ErrorState from "../components/ErrorState";
+
 
 
 function Dashboard() {
@@ -21,7 +23,11 @@ function Dashboard() {
   const [activities, setActivities] = useState([]);
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("name");
+  const [error, setError] = useState(false);
 
+  const retryFetch = () => {
+    window.location.reload();
+  };
   useEffect(() => {
 
     const fetchDashboard = async () => {
@@ -53,6 +59,7 @@ function Dashboard() {
       } catch (error) {
 
         console.log(error);
+        setError(true);
 
       }
 
@@ -65,7 +72,14 @@ function Dashboard() {
   if (!dashboard) {
     return <Skeleton />;
   }
-
+  
+  if (error) {
+    return (
+      <ErrorState
+        onRetry={retryFetch}
+      />
+    );
+  }
   const filteredRepos = repos.filter((repo) =>
     repo.name.toLowerCase().includes(
       search.toLowerCase()
