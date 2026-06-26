@@ -11,6 +11,8 @@ import Navbar from "../components/Navbar";
 import ActivityList from "../components/ActivityList";
 import RepoAnalytics from "../components/RepoAnalytics";
 import ContributionHeatmap from "../components/ContributionHeatmap";
+import Skeleton from "../components/Skeleton";
+
 
 function Dashboard() {
 
@@ -61,11 +63,7 @@ function Dashboard() {
   }, []);
 
   if (!dashboard) {
-    return (
-      <h1 className="text-white text-center mt-10">
-        Loading...
-      </h1>
-    );
+    return <Skeleton />;
   }
 
   const filteredRepos = repos.filter((repo) =>
