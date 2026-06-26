@@ -9,6 +9,7 @@ import LanguageChart from "../components/LanguageChart";
 import TopRepos from "../components/TopRepos";
 import Navbar from "../components/Navbar";
 import ActivityList from "../components/ActivityList";
+import RepoAnalytics from "../components/RepoAnalytics";
 
 function Dashboard() {
 
@@ -35,6 +36,12 @@ function Dashboard() {
         const activityResponse = await api.get(
           "/github/activity?user_id=1"
         );
+        
+        console.log("FULL DASHBOARD RESPONSE");
+        console.log(response.data);
+        console.log("STATS");
+        console.log(response.data.stats);
+
 
         setDashboard(response.data);
         setRepos(repoResponse.data);
@@ -193,6 +200,10 @@ function Dashboard() {
 
         <ActivityList
           activities={activities}
+        />
+
+        <RepoAnalytics
+          repos={repos}
         />
 
         <RepoList

@@ -256,11 +256,18 @@ async def get_dashboard(
     total_stars = 0
     total_forks = 0
 
+    public_repositories = 0
+    private_repositories = 0
+
     for repo in repos:
 
         total_stars += repo["stargazers_count"]
         total_forks += repo["forks_count"]
 
+        if repo["private"]:
+            private_repositories += 1
+        else:
+            public_repositories += 1
         language = repo["language"]
 
         if language:
@@ -285,7 +292,9 @@ async def get_dashboard(
                 key=languages.get
             ) if languages else None,
             "total_stars": total_stars,
-            "total_forks": total_forks
+            "total_forks": total_forks,
+            "public_repositories": public_repositories,
+            "private_repositories": private_repositories
         },
         "languages": languages
     }
