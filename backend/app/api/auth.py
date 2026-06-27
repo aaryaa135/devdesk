@@ -30,7 +30,7 @@ oauth.register(
 @router.get("/github/login")
 async def login(request: Request):
 
-    redirect_uri = "http://localhost:8000/auth/github/callback"
+    redirect_uri = "redirect_uri = "https://devdesk-oefw.onrender.com/auth/github/callback""
 
     return await oauth.github.authorize_redirect(
         request,
