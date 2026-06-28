@@ -1,3 +1,12 @@
+.react-calendar-heatmap {
+  width: 100%;
+}
+
+.react-calendar-heatmap svg {
+  width: 100%;
+  height: 140px;
+}
+
 .react-calendar-heatmap text {
   fill: #94a3b8;
   font-size: 12px;
@@ -5,6 +14,7 @@
 
 .react-calendar-heatmap rect {
   rx: 3;
+  ry: 3;
   transition: 0.2s;
 }
 

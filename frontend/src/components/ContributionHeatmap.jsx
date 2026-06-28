@@ -27,39 +27,44 @@ function ContributionHeatmap() {
 
       <div className="overflow-x-auto">
 
-        <CalendarHeatmap
+        <div className="min-w-[750px]">
+
+          <CalendarHeatmap
             startDate={
-                new Date(
-                    Date.now() - 120 * 86400000
-                )
+              new Date(
+                Date.now() - 120 * 86400000
+              )
             }
             endDate={new Date()}
             values={values}
             classForValue={(value) => {
 
-                if (!value)
-                    return "color-empty";
+              if (!value)
+                return "color-empty";
 
-                return `color-scale-${value.count}`;
+              return `color-scale-${value.count}`;
 
-                }}
-            />
-
-        </div>
-
-        <div className="flex items-center justify-end gap-2 mt-6 text-sm text-slate-400">
-
-            <span>Less</span>
-
-                <div className="w-4 h-4 bg-slate-800 rounded-sm"></div>
-                <div className="w-4 h-4 bg-cyan-900 rounded-sm"></div>
-                <div className="w-4 h-4 bg-cyan-700 rounded-sm"></div>
-                <div className="w-4 h-4 bg-cyan-500 rounded-sm"></div>
-                <div className="w-4 h-4 bg-cyan-300 rounded-sm"></div>
-
-            <span>More</span>
+            }}
+          />
 
         </div>
+
+      </div>
+
+      <div className="flex items-center justify-end gap-2 mt-6 text-sm text-slate-400">
+
+        <span>Less</span>
+
+        <div className="w-4 h-4 bg-slate-800 rounded-sm"></div>
+        <div className="w-4 h-4 bg-cyan-900 rounded-sm"></div>
+        <div className="w-4 h-4 bg-cyan-700 rounded-sm"></div>
+        <div className="w-4 h-4 bg-cyan-500 rounded-sm"></div>
+        <div className="w-4 h-4 bg-cyan-300 rounded-sm"></div>
+
+        <span>More</span>
+
+      </div>
+
     </div>
 
   );
