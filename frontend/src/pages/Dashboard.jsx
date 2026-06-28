@@ -35,23 +35,18 @@ function Dashboard() {
       try {
 
         const response = await api.get(
-          "/github/dashboard?user_id=1"
+          "/github/dashboard"
         );
 
         const repoResponse = await api.get(
-          "/github/repos?user_id=1"
+          "/github/repos"
         );
 
         const activityResponse = await api.get(
-          "/github/activity?user_id=1"
+          "/github/activity"
         );
         
-        console.log("FULL DASHBOARD RESPONSE");
-        console.log(response.data);
-        console.log("STATS");
-        console.log(response.data.stats);
-
-
+        
         setDashboard(response.data);
         setRepos(repoResponse.data);
         setActivities(activityResponse.data);
@@ -69,10 +64,6 @@ function Dashboard() {
 
   }, []);
 
-  if (!dashboard) {
-    return <Skeleton />;
-  }
-  
   if (error) {
     return (
       <ErrorState
@@ -80,6 +71,11 @@ function Dashboard() {
       />
     );
   }
+
+  if (!dashboard) {
+    return <Skeleton />;
+  }
+
   const filteredRepos = repos.filter((repo) =>
     repo.name.toLowerCase().includes(
       search.toLowerCase()

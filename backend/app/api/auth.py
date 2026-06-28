@@ -1,19 +1,22 @@
 from fastapi import APIRouter, Request, Depends
+from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
+
 from authlib.integrations.starlette_client import OAuth
 from dotenv import load_dotenv
-from app.core.security import create_access_token
-from app.core.dependencies import get_current_user
-from fastapi.responses import JSONResponse
 
 from app.db.database import get_db
 from app.models.user import User
+from app.core.security import create_access_token
+from app.core.dependencies import get_current_user
 
 import os
 
 load_dotenv()
 
 router = APIRouter()
+
+FRONTEND_URL = "https://devdesk-coral.vercel.app"
 
 oauth = OAuth()
 
@@ -24,18 +27,23 @@ oauth.register(
     access_token_url="https://github.com/login/oauth/access_token",
     authorize_url="https://github.com/login/oauth/authorize",
     api_base_url="https://api.github.com/",
-    client_kwargs={"scope": "user:email"},
+    client_kwargs={
+        "scope": "user:email"
+    },
 )
+
 
 @router.get("/github/login")
 async def login(request: Request):
 
-    redirect_uri = "redirect_uri = "https://devdesk-oefw.onrender.com/auth/github/callback""
+    redirect_uri = "https://devdesk-oefw.onrender.com/auth/github/callback"
 
     return await oauth.github.authorize_redirect(
         request,
         redirect_uri
     )
+
+
 @router.get("/github/callback", name="callback")
 async def callback(
     request: Request,
@@ -63,7 +71,7 @@ async def callback(
 
         db.commit()
 
-    if not existing_user:
+    else:
 
         existing_user = User(
             github_id=str(github_user["id"]),
@@ -78,25 +86,25 @@ async def callback(
         db.refresh(existing_user)
 
     access_token = create_access_token(
-    {
-        "user_id": existing_user.id,
-        "github_username": existing_user.github_username
-    }
-)
+        {
+            "user_id": existing_user.id,
+            "github_username": existing_user.github_username
+        }
+    )
 
-    return JSONResponse(
-    content={
-        "message": "Login successful",
-        "access_token": access_token,
-        "token_type": "bearer",
-        "user_id": existing_user.id,
-        "github_username": existing_user.github_username
-    }
-)
+    return RedirectResponse(
+        url=f"{FRONTEND_URL}/auth/success?token={access_token}"
+    )
+
 
 @router.get("/me")
 async def get_me(
     current_user=Depends(get_current_user)
 ):
 
-    return current_user
+    return {
+        "id": current_user.id,
+        "github_username": current_user.github_username,
+        "email": current_user.email,
+        "avatar_url": current_user.avatar_url
+    }

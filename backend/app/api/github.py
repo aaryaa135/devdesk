@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.db.database import get_db
-from app.models.user import User
+from app.core.dependencies import get_current_user
 
 import httpx
 
@@ -11,19 +11,11 @@ router = APIRouter()
 
 @router.get("/repos")
 async def get_repositories(
-    user_id: int,
+    current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
 
-    user = db.query(User).filter(
-        User.id == user_id
-    ).first()
-
-    if not user:
-        raise HTTPException(
-            status_code=404,
-            detail="User not found"
-        )
+    user = current_user
 
     headers = {
         "Authorization": f"Bearer {user.github_access_token}"
@@ -60,19 +52,11 @@ async def get_repositories(
 
 @router.get("/stats")
 async def get_github_stats(
-    user_id: int,
+    current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
 
-    user = db.query(User).filter(
-        User.id == user_id
-    ).first()
-
-    if not user:
-        raise HTTPException(
-            status_code=404,
-            detail="User not found"
-        )
+    user = current_user
 
     headers = {
         "Authorization": f"Bearer {user.github_access_token}"
@@ -135,19 +119,11 @@ async def get_github_stats(
 
 @router.get("/languages")
 async def get_language_breakdown(
-    user_id: int,
+    current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
 
-    user = db.query(User).filter(
-        User.id == user_id
-    ).first()
-
-    if not user:
-        raise HTTPException(
-            status_code=404,
-            detail="User not found"
-        )
+    user = current_user
 
     headers = {
         "Authorization": f"Bearer {user.github_access_token}"
@@ -179,19 +155,11 @@ async def get_language_breakdown(
 
 @router.get("/profile")
 async def get_profile(
-    user_id: int,
+    current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
 
-    user = db.query(User).filter(
-        User.id == user_id
-    ).first()
-
-    if not user:
-        raise HTTPException(
-            status_code=404,
-            detail="User not found"
-        )
+    user = current_user
 
     headers = {
         "Authorization": f"Bearer {user.github_access_token}"
@@ -218,19 +186,11 @@ async def get_profile(
 
 @router.get("/dashboard")
 async def get_dashboard(
-    user_id: int,
+    current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
 
-    user = db.query(User).filter(
-        User.id == user_id
-    ).first()
-
-    if not user:
-        raise HTTPException(
-            status_code=404,
-            detail="User not found"
-        )
+    user = current_user
 
     headers = {
         "Authorization": f"Bearer {user.github_access_token}"
@@ -301,19 +261,11 @@ async def get_dashboard(
 
 @router.get("/activity")
 async def get_recent_activity(
-    user_id: int,
+    current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
 
-    user = db.query(User).filter(
-        User.id == user_id
-    ).first()
-
-    if not user:
-        raise HTTPException(
-            status_code=404,
-            detail="User not found"
-        )
+    user = current_user
 
     headers = {
         "Authorization": f"Bearer {user.github_access_token}"

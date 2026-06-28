@@ -1,13 +1,17 @@
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from sqlalchemy.orm import Session
 
+from app.db.database import get_db
+from app.models.user import User
 from app.core.security import verify_token
 
 security = HTTPBearer()
 
 
 def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(security)
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(get_db)
 ):
 
     token = credentials.credentials
@@ -21,4 +25,15 @@ def get_current_user(
             detail="Invalid token"
         )
 
-    return payload
+    user = db.query(User).filter(
+        User.id == payload["user_id"]
+    ).first()
+
+    if not user:
+
+        raise HTTPException(
+            status_code=401,
+            detail="User not found"
+        )
+
+    return user
