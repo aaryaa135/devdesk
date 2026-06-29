@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
+from app.api.opportunities import (
+    router as opportunities_router
+) 
 
 from app.api.github import router as github_router
 from app.api.auth import router as auth_router
@@ -39,4 +42,16 @@ app.include_router(
 def home():
     return {
         "message": "DevDesk Backend Running"
+    }
+
+app.include_router(
+    opportunities_router,
+    prefix="/opportunities",
+    tags=["Opportunities"]
+)
+
+@app.get("/health")
+def health():
+    return {
+        "status": "ok"
     }

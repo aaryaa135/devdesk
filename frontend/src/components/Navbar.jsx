@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-
+import { Link } from "react-router-dom"; 
 function Navbar({ profile }) {
 
   const navigate = useNavigate();
@@ -22,8 +22,34 @@ function Navbar({ profile }) {
           DevDesk
         </h1>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-8">
+          <div className="flex items-center gap-6">
 
+            <Link
+              to="/"
+              className="
+                text-slate-300
+                hover:text-cyan-400
+                transition
+                font-medium
+              "
+            >
+              Dashboard
+            </Link>
+
+            <Link
+              to="/opportunities"
+              className="
+                text-slate-300
+                hover:text-cyan-400
+                transition
+                font-medium
+              "
+            >
+              Opportunities
+            </Link>
+
+          </div>
           <img
             src={profile.avatar_url}
             alt="avatar"

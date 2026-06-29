@@ -12,6 +12,7 @@ import ActivityList from "../components/ActivityList";
 import RepoAnalytics from "../components/RepoAnalytics";
 import Skeleton from "../components/Skeleton";
 import ErrorState from "../components/ErrorState";
+import { Link } from "react-router-dom";
 
 function Dashboard() {
 
@@ -211,6 +212,54 @@ function Dashboard() {
         <RepoAnalytics
           repos={repos}
         />
+
+        <div
+          className="
+            bg-slate-900
+            rounded-2xl
+            p-8
+            mt-8
+            border
+            border-slate-800
+          "
+        >
+
+          <h2 className="text-3xl font-bold text-cyan-400">
+
+            Opportunity Hub
+
+          </h2>
+
+          <p className="text-slate-300 mt-4">
+
+            Explore live internships and student opportunities from top companies.
+
+          </p>
+
+          <Link
+
+            to="/opportunities"
+
+            className="
+              inline-block
+              mt-6
+              bg-cyan-500
+              hover:bg-cyan-400
+              text-black
+              font-semibold
+              px-6
+              py-3
+              rounded-xl
+              transition
+            "
+
+          >
+
+            Explore Opportunities →
+
+          </Link>
+
+        </div>
 
         <RepoList
           repos={sortedRepos}
