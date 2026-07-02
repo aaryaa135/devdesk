@@ -1,20 +1,23 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
-from app.api.opportunities import (
-    router as opportunities_router
-) 
 
-from app.api.github import router as github_router
 from app.api.auth import router as auth_router
+from app.api.github import router as github_router
+from app.api.opportunities import router as opportunities_router
 
-app = FastAPI(title="DevDesk API")
+app = FastAPI(
+    title="DevDesk API",
+    version="2.0.0"
+)
 
+# Session Middleware
 app.add_middleware(
     SessionMiddleware,
     secret_key="devdesk_session_secret"
 )
 
+# CORS Middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -26,6 +29,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Root Endpoint
+@app.get("/")
+def home():
+    return {
+        "message": "DevDesk Backend Running 🚀"
+    }
+
+# Health Check
+@app.get("/health")
+def health():
+    return {
+        "status": "ok"
+    }
+
+# Routers
 app.include_router(
     auth_router,
     prefix="/auth",
@@ -38,20 +56,8 @@ app.include_router(
     tags=["GitHub"]
 )
 
-@app.get("/")
-def home():
-    return {
-        "message": "DevDesk Backend Running"
-    }
-
 app.include_router(
     opportunities_router,
     prefix="/opportunities",
     tags=["Opportunities"]
 )
-
-@app.get("/health")
-def health():
-    return {
-        "status": "ok"
-    }

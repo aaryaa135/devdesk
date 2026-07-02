@@ -237,26 +237,128 @@ async def get_dashboard(
             else:
                 languages[language] = 1
 
+    developer_score = 50
+
+    developer_score += min(len(repos), 20)
+
+    developer_score += min(
+        github_user.get("followers", 0),
+        10
+    )
+
+    if total_stars >= 20:
+        developer_score += 10
+
+    if total_forks >= 10:
+        developer_score += 5
+
+    developer_score = min(
+        developer_score,
+        100
+    )
+
+    strengths = []
+
+    if "Python" in languages:
+        strengths.append(
+            "Strong Python development"
+        )
+
+    if "JavaScript" in languages:
+        strengths.append(
+            "Frontend development"
+        )
+
+    if "TypeScript" in languages:
+        strengths.append(
+            "Modern TypeScript workflow"
+        )
+
+    if github_user.get("followers",0) >= 10:
+        strengths.append(
+            "Active GitHub presence"
+        )
+
+    improvements = []
+
+    if "Dockerfile" not in str(repos):
+        improvements.append(
+            "Learn Docker"
+        )
+
+    if "Jupyter Notebook" not in languages:
+        improvements.append(
+            "Explore Machine Learning"
+        )
+
+    if len(repos) < 10:
+        improvements.append(
+            "Build more production-ready projects"
+        )
+
+    roadmap = [
+
+        "Docker",
+
+        "CI/CD with GitHub Actions",
+
+        "System Design",
+
+        "AWS",
+
+        "Open Source Contributions"
+
+    ]
+
     return {
+
         "profile": {
+
             "name": github_user.get("name"),
+
             "username": github_user.get("login"),
+
             "followers": github_user.get("followers"),
+
             "following": github_user.get("following"),
+
             "avatar_url": github_user.get("avatar_url")
+
         },
+
         "stats": {
+
             "total_repositories": len(repos),
+
             "top_language": max(
                 languages,
                 key=languages.get
             ) if languages else None,
+
             "total_stars": total_stars,
+
             "total_forks": total_forks,
+
             "public_repositories": public_repositories,
+
             "private_repositories": private_repositories
+
         },
-        "languages": languages
+
+        "languages": languages,
+
+        "career_ai": {
+
+            "developer_score": developer_score,
+
+            "strengths": strengths,
+
+            "improvements": improvements,
+
+            "roadmap": roadmap
+
+        }
+
     }
 
 @router.get("/activity")

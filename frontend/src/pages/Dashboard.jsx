@@ -14,6 +14,7 @@ import Skeleton from "../components/Skeleton";
 import ErrorState from "../components/ErrorState";
 import { Link } from "react-router-dom";
 
+
 function Dashboard() {
 
   const [dashboard, setDashboard] = useState(null);
@@ -70,8 +71,11 @@ function Dashboard() {
     );
   }
 
-  if (!dashboard) {
-    return <Skeleton />;
+  if (
+      !dashboard ||
+      !dashboard.career_ai
+  ) {
+      return <Skeleton />;
   }
 
   const filteredRepos = repos.filter((repo) =>
